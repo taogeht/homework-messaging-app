@@ -20,6 +20,7 @@ export const classroomStudents = {
     { id: 18, name: "Thor" },
     { id: 19, name: "Wesley" },
     { id: 20, name: "Yuri" },
+
   ],
   "2B": [
     { id: 21, name: "Ariel" },

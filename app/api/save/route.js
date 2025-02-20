@@ -41,7 +41,7 @@ export async function POST(request) {
     };
 
     // You might want to store this metadata in a database instead
-    const response = await client.putFileContents(
+    await client.putFileContents(
       '/Recordings/metadata.json',
       JSON.stringify(recording),
       { overwrite: true }

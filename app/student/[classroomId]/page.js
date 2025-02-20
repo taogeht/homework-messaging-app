@@ -27,6 +27,7 @@ export default function StudentPage() {
     } catch (error) {
       console.error('Error fetching students:', error);
     }
+    
   };
 
   useEffect(() => {

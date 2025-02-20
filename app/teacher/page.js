@@ -3,17 +3,12 @@
 
 import React, { useEffect, useState } from 'react';
 import styles from './TeacherPage.module.css';  // We'll create this next
-import { useParams } from 'next/navigation';
 import { classroomStudents } from '../data/students';
 
 export default function TeacherPage() {
   const [recordings, setRecordings] = useState([]);
   const [selectedClass, setSelectedClass] = useState(null);
   const [selectedWeek, setSelectedWeek] = useState(null);
-  const [allStudents, setAllStudents] = useState([]);
-  const [students, setStudents] = useState([]);
-  const params = useParams();
-  const classroomId = params.classroomId;
 
   // Get unique class names from recordings
   const classes = [...new Set(recordings.map(recording => recording.class))];
@@ -36,55 +31,7 @@ export default function TeacherPage() {
         setRecordings(data);
       })
       .catch((error) => console.error('Error fetching recordings:', error));
-
-    // Fetch all students with improved error handling and debugging
-    fetch('/api/students')
-      .then(async (response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const contentType = response.headers.get("content-type");
-        if (!contentType || !contentType.includes("application/json")) {
-          throw new TypeError("Expected JSON response");
-        }
-        const data = await response.json();
-        console.log('All students data:', data);
-        setAllStudents(data);
-      })
-      .catch((error) => console.error('Error fetching all students:', error));
-
-    // Modified fetchStudents with more debugging
-    const fetchStudents = async () => {
-      try {
-        console.log('Fetching students for classroom:', classroomId);
-        const response = await fetch(`/api/classrooms/${classroomId}/students`);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        console.log('Classroom students data:', data); // Debug log
-        
-        // If no classroom-specific students, use all students
-        if (!data || !data.length) {
-          console.log('No classroom-specific students, using all students');
-          setStudents(allStudents);
-        } else {
-          setStudents(data.students || data);
-        }
-      } catch (error) {
-        console.error('Error fetching classroom students:', error);
-        // Fallback to all students if classroom-specific fetch fails
-        console.log('Falling back to all students');
-        setStudents(allStudents);
-      }
-    };
-
-    if (classroomId) {
-      fetchStudents();
-    } else {
-      setStudents(allStudents);
-    }
-  }, [classroomId]);
+  }, []);
 
   // Group recordings by week
   const getWeeks = () => {

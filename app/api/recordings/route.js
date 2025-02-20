@@ -1,6 +1,9 @@
 // app/api/recordings/route.js
 import { readFile } from 'fs/promises';
 import { join } from 'path';
+import { NextResponse } from 'next/server';
+
+export const dynamic = 'force-static';
 
 export async function GET() {
   try {
@@ -8,9 +11,12 @@ export async function GET() {
     const data = await readFile(dbPath, 'utf8');
     const recordings = JSON.parse(data);
     
-    return Response.json(recordings);
+    return NextResponse.json(recordings);
   } catch (error) {
-    console.error('Error fetching recordings:', error);
-    return Response.json([], { status: 500 });
+    console.error('Error:', error);
+    return NextResponse.json(
+      { error: 'Failed to fetch recordings' },
+      { status: 500 }
+    );
   }
 }
